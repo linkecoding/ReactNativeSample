@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { SafeAreaView, ScrollView, StatusBar, Text } from 'react-native';
 import RTNTextHelper from 'rtn-texthelper/js/NativeRTNTextHelper';
+import RTNBase64Helper from './tm/NativeRTNBase64Helper';
 
 function App(): React.JSX.Element {
   useEffect(() => {
@@ -18,6 +19,10 @@ function App(): React.JSX.Element {
       .catch(() => {
         // ignore
       });
+    const result2 = RTNBase64Helper.base64EncodeSync(
+      'abcdennkkdjededkedjkdjekj',
+    );
+    console.log('===base64 result===', result2);
   }, []);
   return (
     <SafeAreaView>
