@@ -2,28 +2,20 @@
 #include <DefaultTurboModuleManagerDelegate.h>
 #include <fbjni/fbjni.h>
 #include <react/renderer/componentregistry/ComponentDescriptorProviderRegistry.h>
-#include <rncore.h>
+#include <rncli.h>
 #include <RTNBase64HelperModule.h>
-#ifdef REACT_NATIVE_APP_CODEGEN_HEADER
-#include REACT_NATIVE_APP_CODEGEN_HEADER
-#endif
-#ifdef REACT_NATIVE_APP_COMPONENT_DESCRIPTORS_HEADER
-#include REACT_NATIVE_APP_COMPONENT_DESCRIPTORS_HEADER
-#endif
 
 namespace facebook::react {
 
     void registerComponents(
             std::shared_ptr<const ComponentDescriptorProviderRegistry> registry) {
-#ifdef REACT_NATIVE_APP_COMPONENT_REGISTRATION
-        REACT_NATIVE_APP_COMPONENT_REGISTRATION(registry);
-#endif
+        rncli_registerProviders(registry);
     }
 
     std::shared_ptr<TurboModule> cxxModuleProvider(
             const std::string &name,
             const std::shared_ptr<CallInvoker> &jsInvoker) {
-        if (name == "RTNBase64Helper"){
+        if (name == "RTNBase64Helper") {
             return std::make_shared<facebook::react::RTNBase64HelperModule>(jsInvoker);
         }
         return nullptr;
@@ -32,16 +24,7 @@ namespace facebook::react {
     std::shared_ptr<TurboModule> javaModuleProvider(
             const std::string &name,
             const JavaTurboModule::InitParams &params) {
-#ifdef REACT_NATIVE_APP_MODULE_PROVIDER
-        auto module = REACT_NATIVE_APP_MODULE_PROVIDER(name, params);
-  if (module != nullptr) {
-    return module;
-  }
-#endif
-        if (auto module = rncore_ModuleProvider(name, params)) {
-            return module;
-        }
-        return nullptr;
+        return rncli_ModuleProvider(name, params);
     }
 
 } // namespace facebook::react
